@@ -9,7 +9,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseSettings;
  */
 public final class GraphDatabase {
 
-    private static final String GRAPH_DIR_LOC = "db";
+    private static final String GRAPH_DIR_LOC = "graph.db";
 
     private final GraphDatabaseService graphDatabaseService;
 
@@ -20,7 +20,7 @@ public final class GraphDatabase {
     private GraphDatabase() {
         graphDatabaseService = new GraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder(new File(GRAPH_DIR_LOC))
-                .setConfig(GraphDatabaseSettings.allow_upgrade, "true")
+                //.setConfig(GraphDatabaseSettings.allow_upgrade, "true")
                 .newGraphDatabase();
         registerShutdownHook();
     }
@@ -35,6 +35,14 @@ public final class GraphDatabase {
             transaction.success();
             return result.resultAsString();
         }
+    }
+
+    public void generateSimpleGrapgh() {
+        Generator.generateGraph(this, graphDatabaseService);
+    }
+
+    public void generateSampleData() {
+        Generator.generateData(this, graphDatabaseService);
     }
 
     public Node createUser(String userName, String firstName, String lastName, String country, int age){
@@ -55,19 +63,11 @@ public final class GraphDatabase {
         }
     }
 
-    public void createRelationShip(Relationships relationType, Node firstNode, Node secondNode){
+    public Relationship createRelationship(Node from, Node to, Relationships relationType){
         try(Transaction transaction = graphDatabaseService.beginTx()){
             transaction.success();
-            firstNode.createRelationshipTo(secondNode, relationType);
+            return from.createRelationshipTo(to, relationType);
         }
-    }
-
-    public void generateSimpleGrapgh() {
-        Generator.generateGraph(this, graphDatabaseService);
-    }
-
-    public void generateSampleData() {
-        Generator.generateData(this, graphDatabaseService);
     }
 
     public Node createMovie(String title, String category) {
@@ -82,6 +82,22 @@ public final class GraphDatabase {
             if(category != null) node.setProperty("Category", category);
 
             return node;
+        }
+    }
+
+    public void createFriendsRelationship(Node from, Node to, int since) {
+        try(Transaction transaction = graphDatabaseService.beginTx()){
+            transaction.success();
+            Relationship r = from.createRelationshipTo(to, Relationships.FRIENDS);
+            r.setProperty("Since", Integer.toString(since));
+        }
+    }
+
+    public void createRatedRelationship(Node from, Node to, int scale) {
+        try(Transaction transaction = graphDatabaseService.beginTx()){
+            transaction.success();
+            Relationship r = from.createRelationshipTo(to, Relationships.RATED);
+            r.setProperty("Scale", Integer.toString(scale));
         }
     }
 }

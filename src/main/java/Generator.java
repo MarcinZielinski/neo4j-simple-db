@@ -61,39 +61,20 @@ public class Generator {
             Node movie1 = db.createMovie("ASDFMovie", "Animation");
             Node movie2 = db.createMovie("Me in the zoo", "Movie");
 
-            Relationship friends1 = user1.createRelationshipTo(user2, Relationships.FRIENDS);
-            friends1.setProperty("Since", "2012");
+            db.createFriendsRelationship(user1, user2, 2012);
+            db.createFriendsRelationship(user2, user1, 2012);
+            db.createFriendsRelationship(user2, user1, 2013);
+            db.createFriendsRelationship(user3, user1, 2013);
 
-            Relationship friends2 = user2.createRelationshipTo(user1, Relationships.FRIENDS);
-            friends2.setProperty("Since", "2012");
+            db.createRatedRelationship(user1, movie1, 10);
+            db.createRatedRelationship(user1, movie2, 8);
+            db.createRatedRelationship(user1, movie1, 2);
 
-            Relationship friends3 = user2.createRelationshipTo(user1, Relationships.FRIENDS);
-            friends3.setProperty("Since", "2013");
-
-            Relationship friends4 = user3.createRelationshipTo(user1, Relationships.FRIENDS);
-            friends4.setProperty("Since", "2013");
-
-            Relationship rated1 = user1.createRelationshipTo(movie1, Relationships.RATED);
-            rated1.setProperty("Scale", "10");
-
-            Relationship rated2 = user1.createRelationshipTo(movie2, Relationships.RATED);
-            rated2.setProperty("Scale", "8");
-
-            Relationship rated3 = user1.createRelationshipTo(movie1, Relationships.RATED);
-            rated3.setProperty("Scale", "2");
-
-            Relationship viewed1 = user1.createRelationshipTo(movie1, Relationships.VIEWED);
-            viewed1.setProperty("Scale", "2");
-
-            Relationship viewed2 = user1.createRelationshipTo(movie2, Relationships.VIEWED);
-            viewed2.setProperty("Scale", "8");
-
-            Relationship viewed3 = user1.createRelationshipTo(movie1, Relationships.VIEWED);
-            viewed3.setProperty("Scale", "2");
-
-            user1.createRelationshipTo(movie2, Relationships.NOT_INTERESTED);
-
-            user2.createRelationshipTo(movie1, Relationships.WANT_TO_SEE);
+            db.createRelationship(user1, movie1, Relationships.VIEWED);
+            db.createRelationship(user1, movie2, Relationships.VIEWED);
+            db.createRelationship(user1, movie1, Relationships.VIEWED);
+            db.createRelationship(user1, movie2, Relationships.NOT_INTERESTED);
+            db.createRelationship(user2, movie1, Relationships.WANT_TO_SEE);
         }
     }
 }
