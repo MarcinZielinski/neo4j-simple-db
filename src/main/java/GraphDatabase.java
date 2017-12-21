@@ -20,7 +20,7 @@ public final class GraphDatabase {
     private GraphDatabase() {
         graphDatabaseService = new GraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder(new File(GRAPH_DIR_LOC))
-                //.setConfig(GraphDatabaseSettings.allow_upgrade, "true")
+                .setConfig(GraphDatabaseSettings.allow_upgrade, "true")
                 .newGraphDatabase();
         registerShutdownHook();
     }
